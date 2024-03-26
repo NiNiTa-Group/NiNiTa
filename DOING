@@ -1,0 +1,40 @@
+import android.content.Context;
+import android.telephony.CellInfo;
+import android.telephony.CellInfoGsm;
+import android.telephony.CellIdentityGsm;
+import android.telephony.TelephonyManager;
+import android.widget.Toast;
+
+public class CellularTowerTriangulation {
+
+    public static void getCellularInfo(Context context) {
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
+        if (telephonyManager != null) {
+            try {
+                for (CellInfo cellInfo : telephonyManager.getAllCellInfo()) {
+                    if (cellInfo instanceof CellInfoGsm) {
+                        CellIdentityGsm cellIdentityGsm = ((CellInfoGsm) cellInfo).getCellIdentity();
+                        
+                        int cellId = cellIdentityGsm.getCid();
+                        int mcc = cellIdentityGsm.getMcc();
+                        int mnc = cellIdentityGsm.getMnc();
+                        
+                        // You can use these values for location estimation
+                        // Keep in mind that the accuracy may vary
+
+                        // Displaying information (replace with your logic)
+                        Toast.makeText(context,
+                                "Cell ID: " + cellId + "\n" +
+                                "MCC: " + mcc + "\n" +
+                                "MNC: " + mnc,
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+            } catch (SecurityException e) {
+                e.printStackTrace();
+                // Handle permission-related exceptions
+            }
+        }
+    }
+}
